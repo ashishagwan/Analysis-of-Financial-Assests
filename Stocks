@@ -1,0 +1,21 @@
+# Calculate daily returns for each stock
+stock_returns = data['Adj Close'].pct_change()
+
+# Calculate portfolio value for each stock over time
+stock_values = (stock_returns + 1).cumprod()
+
+# Calculate statistics for each stock
+stock_statistics = {}
+for stock_symbol in portfolio.keys():
+    stock_statistics[stock_symbol] = {
+        'Stock Returns': stock_values[stock_symbol].mean(),
+        'Stock Volatility': stock_values[stock_symbol].std(),
+        'Annualized Returns': stock_values[stock_symbol].mean() * 252,  # 252 trading days in a year
+        'Annualized Volatility': stock_values[stock_symbol].std() * (252**0.5),
+    }
+
+print("Stocks Statistics:")
+for stock_symbol, stats in stock_statistics.items():
+    print(f"{stock_symbol}:")
+    for stat, value in stats.items():
+        print(f"  {stat}: {value:.4f}")
